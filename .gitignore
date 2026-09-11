@@ -451,3 +451,5 @@ backend/obj/
 backend/bin/
 backend/obj/*
 backend/bin/*
+.venv/
+.venv/*
