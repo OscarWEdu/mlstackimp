@@ -6,3 +6,8 @@
 - Run npm install to install all frontend packages and dependencies.
 - Launch the application with 'npm run dev'.
 - Open the website at: http://localhost:5173
+
+# Install Jupyter notebook libraries
+
+- Set up a local python environment (In VSCode this can be done by selectin the kernel via the Jupyter extension when editing the notebook file, and choosing to create a new python environment).
+- Add the required libraries via "python -m pip install", if the environment was created via Jupyter, installing the libraries; "scikit-learn", and "seaborn", should add all the required libraries.
