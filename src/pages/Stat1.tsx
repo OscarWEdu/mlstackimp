@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./../style.css";
 
 async function getBackendResponse(): Promise<string> {
     const response = await fetch("/api");
@@ -89,11 +88,10 @@ export default function HomePage() {
                 throw new Error(`Backend returned ${response.status}`);
             }
 
-            const data: { sleepQualityIndex: number } =
-                await response.json();
+            const data: { bdi: number } = await response.json();
 
             setQuestionnaireMessage(
-                `Sleep Quality Index: ${data.sleepQualityIndex.toFixed(2)}`
+                `Sleep Quality Index: ${data.bdi.toFixed(2)}`
             );
         } catch (error) {
             setQuestionnaireMessage(`Backend error: ${error}`);
