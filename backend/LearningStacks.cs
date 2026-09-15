@@ -4,6 +4,8 @@ using Microsoft.ML;
 
 public static class LearningStacks
 {
+
+    private const string ModelPath = "model.zip";
     public static double ExampleStack()
     {
         string dataPath = "screen_time_mental_health.csv";
@@ -35,6 +37,9 @@ public static class LearningStacks
 
         // Step 7. Evaluate the model
         var metrics = ctx.Regression.Evaluate(predictions,labelColumnName: nameof(SleepInput.bdi_total));
+
+        // Step 8. Save the trained model
+        ctx.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
         return metrics.RSquared;
     }
