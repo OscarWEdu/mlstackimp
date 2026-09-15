@@ -7,4 +7,14 @@ var app = builder.Build();
 
 app.MapGet("/api", () => $"R²:   {teststackscore:0.###}");
 
+app.MapPost("/api/predict", (SleepRequest request) =>
+{
+    var bdi = Predictors.SleepBDIPrediction(
+        request.SleepQualityIndex,
+        request.AverageSleepHours
+    );
+
+    return Results.Ok(new { bdi });
+});
+
 app.Run();
