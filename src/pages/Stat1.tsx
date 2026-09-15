@@ -47,6 +47,7 @@ export default function HomePage() {
     );
 
     const [questionnaireMessage, setQuestionnaireMessage] = useState("");
+    const [averageSleepHours, setAverageSleepHours] = useState("");
 
     function selectAnswer(questionIndex: number, answer: number) {
         setAnswers((current) => {
@@ -61,6 +62,13 @@ export default function HomePage() {
             setQuestionnaireMessage("Please answer all four questions.");
             return;
         }
+        if (averageSleepHours === "") {
+            setQuestionnaireMessage("Please answer all questions.");
+            return;
+        }
+
+        const sleepHours = parseInt(averageSleepHours, 10);
+
 
         const numericAnswers: number[] = answers.filter((answer): answer is number => answer !== null);
         const average = numericAnswers.reduce((sum, answer) => sum + answer, 0) / numericAnswers.length;
@@ -73,6 +81,7 @@ export default function HomePage() {
                 },
                 body: JSON.stringify({
                     sleepQualityIndex: average,
+                    averageSleepHours: sleepHours,
                 }),
             });
 
@@ -97,10 +106,27 @@ export default function HomePage() {
             <p id="backend-response">{message}</p>
             <hr className="my-6" />
 
-            <h1 className="mb-6 text-l font-bold">
-                Sleep Quality Index
-            </h1>
+            <div className="mt-6">
+                <label htmlFor="average-sleep-hours">
+                    How many hours have you, on average, slept these last 2 weeks?
+                </label>
 
+                <input
+                    id="average-sleep-hours"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={averageSleepHours}
+                    onChange={(event) =>
+                        setAverageSleepHours(event.target.value)
+                    }
+                    className="ml-3 w-20 rounded border border-gray-300 px-2 py-1"
+                />
+            </div>
+            
+            <label className="mb-6 text-xl font-bold">
+                Please answer the following questions about the quality of your sleep:
+            </label>
             <div className="w-full overflow-x-auto">
                 <div className="min-w-200">
 
