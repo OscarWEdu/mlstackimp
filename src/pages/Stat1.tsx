@@ -62,16 +62,8 @@ export default function HomePage() {
             return;
         }
 
-        const numericAnswers: number[] = answers.filter(
-            (answer): answer is number => answer !== null
-        );
-
-        const total = numericAnswers.reduce(
-            (sum, answer) => sum + answer,
-            0
-        );
-
-        const average = total / numericAnswers.length;
+        const numericAnswers: number[] = answers.filter((answer): answer is number => answer !== null);
+        const average = numericAnswers.reduce((sum, answer) => sum + answer, 0) / numericAnswers.length;
 
         try {
             const response = await fetch("/api/predict", {
