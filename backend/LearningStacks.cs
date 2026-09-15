@@ -41,6 +41,8 @@ public static class LearningStacks
         // Step 8. Save the trained model
         ctx.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
+        // Step 9. Verify the model can load
+        Console.WriteLine($"Reloaded R²: {ctx.Regression.Evaluate(ctx.Model.Load(ModelPath, out _).Transform(testData), labelColumnName: nameof(SleepInput.bdi_total)).RSquared:0.######}");
         return metrics.RSquared;
     }
 }
