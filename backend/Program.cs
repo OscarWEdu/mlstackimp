@@ -7,7 +7,7 @@ var app = builder.Build();
 
 app.MapGet("/api", () => $"R²:   {teststackscore:0.###}");
 
-app.MapPost("/api/predict", (SleepRequest request) =>
+app.MapPost("/api/sleeppredict", (SleepRequest request) =>
 {
     var bdi = Predictors.SleepBDIPrediction(
         request.SleepQualityIndex,

@@ -73,7 +73,7 @@ export default function HomePage() {
         const average = numericAnswers.reduce((sum, answer) => sum + answer, 0) / numericAnswers.length;
 
         try {
-            const response = await fetch("/api/predict", {
+            const response = await fetch("/api/sleeppredict", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
