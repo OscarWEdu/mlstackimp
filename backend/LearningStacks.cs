@@ -5,7 +5,8 @@ using Microsoft.ML;
 public static class LearningStacks
 {
 
-    private const string ModelPath = "model.zip";
+    public static string ExampleStackModelPath => Path.Combine(AppContext.BaseDirectory, "model.zip");
+    
     public static double ExampleStack()
     {
         string dataPath = "screen_time_mental_health.csv";
@@ -39,10 +40,10 @@ public static class LearningStacks
         var metrics = ctx.Regression.Evaluate(predictions,labelColumnName: nameof(SleepInput.bdi_total));
 
         // Step 8. Save the trained model
-        ctx.Model.Save(trainedModel, trainData.Schema, ModelPath);
+        ctx.Model.Save(trainedModel, trainData.Schema, ExampleStackModelPath);
 
         // Step 9. Verify the model can load
-        Console.WriteLine($"Reloaded R²: {ctx.Regression.Evaluate(ctx.Model.Load(ModelPath, out _).Transform(testData), labelColumnName: nameof(SleepInput.bdi_total)).RSquared:0.######}");
+        Console.WriteLine($"Reloaded R²: {ctx.Regression.Evaluate(ctx.Model.Load(ExampleStackModelPath, out _).Transform(testData), labelColumnName: nameof(SleepInput.bdi_total)).RSquared:0.######}");
         return metrics.RSquared;
     }
 }
