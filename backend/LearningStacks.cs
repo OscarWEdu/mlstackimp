@@ -8,7 +8,7 @@ public static class LearningStacks
     public static string dataPath = "screen_time_mental_health.csv";
 
     // Define paths for saving models below here: 
-    public static string SleepTrainerModelPath => Path.Combine(AppContext.BaseDirectory, "model.zip");
+    public static string SleepTrainerModelPath => Path.Combine(AppContext.BaseDirectory, "sleepmodel.zip");
 
     // Example method, includes methods for validation, as well as both saving and loading.
     // For a more minimal example of training, without validation, see SleepTrainer()
