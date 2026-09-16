@@ -1,3 +1,4 @@
+//Add functions for ML training to this file
 namespace mlstack;
 
 using Microsoft.ML;
@@ -5,8 +6,11 @@ using Microsoft.ML;
 public static class LearningStacks
 {
 
+    // Define paths for saving models below here: 
     public static string ExampleStackModelPath => Path.Combine(AppContext.BaseDirectory, "model.zip");
-    
+
+    // Predicts BDI based on sleep_quality_index, and avg_sleep_hours
+    // Serves as an example, but is currently also used in production together with SleepBDIPrediction
     public static double ExampleStack()
     {
         string dataPath = "screen_time_mental_health.csv";
