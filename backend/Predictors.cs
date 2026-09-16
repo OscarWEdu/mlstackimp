@@ -16,7 +16,7 @@ public static class Predictors
             avg_sleep_hours = (float)averageSleepHours
         };
 
-        string modelPath = LearningStacks.ExampleStackModelPath; //All saved model paths should be defined in LearningStacks
+        string modelPath = LearningStacks.SleepTrainerModelPath; //All saved model paths should be defined in LearningStacks
         var ctx = new MLContext();
         ITransformer model = ctx.Model.Load(modelPath, out _); //Gets model
         var predictionEngine = ctx.Model.CreatePredictionEngine<SleepInput, SinglePrediction>(model); //Model wrapper, which processes C# objects instead of dataframes

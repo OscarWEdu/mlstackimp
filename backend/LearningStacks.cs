@@ -5,16 +5,15 @@ using Microsoft.ML;
 
 public static class LearningStacks
 {
+    public static string dataPath = "screen_time_mental_health.csv";
 
     // Define paths for saving models below here: 
-    public static string ExampleStackModelPath => Path.Combine(AppContext.BaseDirectory, "model.zip");
+    public static string SleepTrainerModelPath => Path.Combine(AppContext.BaseDirectory, "model.zip");
 
-    // Predicts BDI based on sleep_quality_index, and avg_sleep_hours
-    // Serves as an example, but is currently also used in production together with SleepBDIPrediction
-    public static double ExampleStack()
+    // Example method, includes methods for validation, as well as both saving and loading.
+    // For a more minimal example of training, without validation, see SleepTrainer()
+    public static double ExampleTrainer()
     {
-        string dataPath = "screen_time_mental_health.csv";
-
         //Step 1. Create an ML Context
         var ctx = new MLContext();
 
@@ -31,7 +30,7 @@ public static class LearningStacks
             .Concatenate("Features",
                 nameof(SleepInput.sleep_quality_index),
                 nameof(SleepInput.avg_sleep_hours))
-            .Append(ctx.Regression.Trainers.Sdca(
+            .Append(ctx.Regression.Trainers.Sdca( // <- Model type specified here
                 labelColumnName: nameof(SleepInput.bdi_total)));
 
         // Step 5. Train the model
@@ -44,10 +43,31 @@ public static class LearningStacks
         var metrics = ctx.Regression.Evaluate(predictions,labelColumnName: nameof(SleepInput.bdi_total));
 
         // Step 8. Save the trained model
-        ctx.Model.Save(trainedModel, trainData.Schema, ExampleStackModelPath);
+        ctx.Model.Save(trainedModel, trainData.Schema, SleepTrainerModelPath);
 
         // Step 9. Verify the model can load
-        Console.WriteLine($"Reloaded R²: {ctx.Regression.Evaluate(ctx.Model.Load(ExampleStackModelPath, out _).Transform(testData), labelColumnName: nameof(SleepInput.bdi_total)).RSquared:0.######}");
+        Console.WriteLine($"Reloaded R²: {ctx.Regression.Evaluate(ctx.Model.Load(SleepTrainerModelPath, out _).Transform(testData), labelColumnName: nameof(SleepInput.bdi_total)).RSquared:0.######}");
         return metrics.RSquared;
+    }
+
+    // ADD ML TRAINING FUNCTIONS HERE
+
+    // Predicts BDI based on sleep_quality_index, and avg_sleep_hours, prediction performed by SleepBDIPrediction
+    public static void SleepTrainer()
+    {
+        var ctx = new MLContext();
+
+        IDataView trainingData = ctx.Data.LoadFromTextFile<SleepInput>(dataPath, hasHeader: true, separatorChar: ',');
+
+        //Build the data processing and training pipeline
+        var pipeline = ctx.Transforms
+            .Concatenate("Features",
+                nameof(SleepInput.sleep_quality_index),
+                nameof(SleepInput.avg_sleep_hours))
+            .Append(ctx.Regression.Trainers.Sdca(
+                labelColumnName: nameof(SleepInput.bdi_total)));
+
+        ITransformer trainedModel = pipeline.Fit(trainingData);
+        ctx.Model.Save(trainedModel, trainingData.Schema, SleepTrainerModelPath);
     }
 }
