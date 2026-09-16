@@ -1,14 +1,15 @@
 using mlstack;
 
-double teststackscore = LearningStacks.ExampleStack();
-
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/api", () => $"R²:   {teststackscore:0.###}");
+app.MapGet("/api", () => "Test Call");
 
 app.MapPost("/api/sleeppredict", (SleepRequest request) =>
 {
+    //Trains associated model if a dump of it doesn't already exist
+    if (!File.Exists(LearningStacks.SleepTrainerModelPath)) { LearningStacks.SleepTrainer(); }
+
     var bdi = Predictors.SleepBDIPrediction(
         request.SleepQualityIndex,
         request.AverageSleepHours
