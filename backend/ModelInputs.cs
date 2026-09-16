@@ -1,3 +1,4 @@
+//Add objects handling data from CSV, formatted for training, in this file.
 namespace mlstack;
 
 using Microsoft.ML.Data;
