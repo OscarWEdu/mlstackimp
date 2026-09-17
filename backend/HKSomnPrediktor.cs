@@ -39,33 +39,19 @@ public static class HKSomnPrediktor
 
     private static string Modellfil(string filnamn) => Path.Combine(ModellMapp, filnamn);
 
-    /// <summary>
-    /// Tränar en modell OM zip-filen saknas (t.ex. efter en färsk klon av repot,
-    /// eftersom *.zip är git-ignorerat). Träningen har fast frö (42) i HKTränare,
-    /// så den automatiskt tränade modellen blir identisk med en manuellt tränad.
-    /// </summary>
-    private static void SäkerställTränad(string filnamn, string kön)
-    {
-        if (File.Exists(Modellfil(filnamn))) return;
-
-        Console.WriteLine($"[HKSomnPrediktor] {filnamn} saknas – tränar automatiskt " +
-                          "(tar någon minut första gången)...");
-        var csvSökväg = Path.GetFullPath(
-            Path.Combine(ModellMapp, "..", "..", "screen_time_mental_health.csv"));
-        new HKTränare(csvSökväg, ModellMapp)
-            .TränaOchSpara(kön, filnamn, målkolumn: nameof(HKRad.sleep_quality_index));
-    }
-
     // Laddar de två sparade sömnkvalitetsmodellerna (en flickmodell, en pojkmodell).
     // Initieras i den statiska konstruktorn så att ev. automatisk träning hinner
-    // ske FÖRE inladdningen.
+    // ske FÖRE inladdningen: TränaModeller.SäkerställAlla tränar alla HK-modeller
+    // som saknar zip-fil (samma frö 42 varje gång => identiska modeller).
     private static readonly HKPrediktor Flickor;
     private static readonly HKPrediktor Pojkar;
 
     static HKSomnPrediktor()
     {
-        SäkerställTränad("hk_modell_somn_flickor.zip", "Girl");
-        SäkerställTränad("hk_modell_somn_pojkar.zip", "Boy");
+        var csvSökväg = Path.GetFullPath(
+            Path.Combine(ModellMapp, "..", "..", "screen_time_mental_health.csv"));
+        TränaModeller.SäkerställAlla(csvSökväg, ModellMapp);
+
         Flickor = HKPrediktor.Ladda(Modellfil("hk_modell_somn_flickor.zip"));
         Pojkar = HKPrediktor.Ladda(Modellfil("hk_modell_somn_pojkar.zip"));
     }
