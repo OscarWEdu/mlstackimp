@@ -91,7 +91,7 @@ export default function HomePage() {
             const data: { bdi: number } = await response.json();
 
             setQuestionnaireMessage(
-                `Sleep Quality Index: ${data.bdi.toFixed(2)}`
+                `BDI: ${data.bdi.toFixed(2)}`
             );
         } catch (error) {
             setQuestionnaireMessage(`Backend error: ${error}`);
