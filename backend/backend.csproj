@@ -4,6 +4,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- hk_models är ett eget, självständigt konsolprojekt och ska inte
+         kompileras in i webbprojektet (dubbla Main/AssemblyInfo annars). -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);hk_models\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

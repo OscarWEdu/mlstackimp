@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    hk_models – eget, isolerat konsolprojekt för HK:s ML-modeller.
+    Det här projektet är MEDVETET skilt från webbprojektet i backend-roten
+    (backend.csproj / namespace mlstack) så att flera utvecklare kan jobba
+    parallellt utan att krocka. Bygg och kör bara från den här mappen:
+        dotnet run
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Eget namespace => inga namnkollisioner med mlstack-klasserna i roten -->
+    <RootNamespace>HKModels</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Samma ML.NET-version som webbprojektet redan använder -->
+    <PackageReference Include="Microsoft.ML" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
