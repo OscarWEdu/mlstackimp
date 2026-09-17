@@ -4,7 +4,7 @@ export default function HomePage() {
 	const navigate = useNavigate();
 
 	return (
-		<div>
+		<div className="flex flex-col items-start gap-4">
 			<button onClick={() => navigate("/stat1")}>
 				Analysis 1
 			</button>
