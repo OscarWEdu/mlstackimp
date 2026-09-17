@@ -5,3 +5,9 @@ public record SleepRequest(
     double SleepQualityIndex,
     int AverageSleepHours
 );
+
+public record SleepObservedPoint(
+    double SleepQualityIndex,
+    double MeanBdi,
+    int Count
+);
