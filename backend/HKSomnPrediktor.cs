@@ -65,9 +65,18 @@ public static class HKSomnPrediktor
             }
 
             // Gör prediktionen: index där LÄGRE värde = bättre sömn.
+            //
+            // screen_time_index är i datasetet ett helhetsbetyg (1–6) över totala
+            // skärmvanor, inte rena timmar. Formuläret frågar bara efter fritids-
+            // timmarna (som användaren kan svara på), så indexet härleds härifrån:
+            // sambandet i datasetet är index ≈ 0,402 * fritidstimmar + 1,628
+            // (korrelation 0,94), klamrat till betygsskalan 1–6.
+            var screenTimeIndex = Math.Clamp(
+                0.402f * (float)request.LeisureScreenHours + 1.628f, 1f, 6f);
+
             var prediktion = prediktor.Predikera(new HKRad
             {
-                screen_time_index = (float)request.ScreenTimeIndex,
+                screen_time_index = screenTimeIndex,
                 est_leisure_screen_hours = (float)request.LeisureScreenHours,
                 avg_sleep_hours = (float)request.SleepHours,
                 midsleep_weekend_hours = (float)request.WeekendMidsleep,
@@ -81,14 +90,16 @@ public static class HKSomnPrediktor
 
 // Data som frontend skickar in. Variabelnamnen är förenklade jämfört med
 // CSV-kolumnerna och mappas enligt nedan:
-//   ScreenTimeIndex     -> screen_time_index       (sammanvägt skärmtidsindex)
 //   LeisureScreenHours  -> est_leisure_screen_hours (fritidsskärmtid, timmar/dag)
 //   SleepHours          -> avg_sleep_hours          (sovtimmar per natt)
 //   WeekendMidsleep     -> midsleep_weekend_hours   (insovningstid helg, timmar efter midnatt)
 //   SocialJetlag        -> social_jetlag_hours      (skillnad sömnrutin vardag/helg, timmar)
 //   Kon                 -> vilken modell som ska användas: "flicka" eller "pojke"
+//
+// OBS: screen_time_index frågas inte ut – det är ett sammanvägt betyg (1–6) i
+// datasetet som användaren inte kan svara på. Det härleds i stället från
+// fritidstimmarna (se kommentaren i endpointen).
 public record SomnRequest(
-    double ScreenTimeIndex,
     double LeisureScreenHours,
     double SleepHours,
     double WeekendMidsleep,

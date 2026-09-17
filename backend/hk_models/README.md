@@ -45,10 +45,15 @@ notebookens "Tolkning av utvärderingen" för varför.
 
 **Sömnkvalitetsmodellerna är redan kopplade:** backend-filen `HKSomnPrediktor.cs`
 (backend-roten) exponerar `POST /api/somnpredict` som tar emot
-`{ screenTimeIndex, leisureScreenHours, sleepHours, weekendMidsleep, socialJetlag, kon }`
+`{ leisureScreenHours, sleepHours, weekendMidsleep, socialJetlag, kon }`
 (där `kon` är `"flicka"` eller `"pojke"`) och svarar med
 `{ kon, sleepQuality }` (lägre värde = bättre sömn). Frontend-sidan är
 `src/pages/SomnPredictor.tsx` (route `/somnpredictor`).
+
+Obs: `screen_time_index` frågas inte ut i formuläret – det är ett sammanvägt
+betyg (1–6) i datasetet som användaren inte kan svara på. Endpointen härleder
+det från fritidstimmarna via sambandet i datan (index ≈ 0,402 × timmar + 1,628,
+korrelation 0,94).
 
 För BDI-modellerna: webbprojektet refererar det här projektet via `ProjectReference`
 i `backend.csproj`, så `HKModels.HKPrediktor` kan användas direkt i webbkod. Exempel

@@ -5,9 +5,12 @@ import { useNavigate } from "react-router-dom";
 // till backend och motsvarar en kolumn i datasetet (se kommentaren nedan).
 //   sleepHours         -> avg_sleep_hours
 //   leisureScreenHours -> est_leisure_screen_hours
-//   screenTimeIndex    -> screen_time_index
 //   weekendMidsleep    -> midsleep_weekend_hours
 //   socialJetlag       -> social_jetlag_hours
+//
+// OBS: screen_time_index finns inte som fält – det är ett sammanvägt betyg
+// (1–6) från datasetet som användaren inte kan svara på. Backend härleder
+// det automatiskt från fritidsskärmtiden.
 const variabler = [
     {
         fält: "sleepHours",
@@ -24,15 +27,6 @@ const variabler = [
             "Tid framför mobil, dator och TV på fritiden – alltså utanför skolarbete.",
         min: 0,
         max: 24,
-    },
-    {
-        fält: "screenTimeIndex",
-        namn: "Skärmtidsindex",
-        förklaring:
-            "Ett sammanvägt mått på din genomsnittliga skärmtid. " +
-            "Skalan går ungefär från 0 till 7, där högre värde = mer skärmtid.",
-        min: undefined,
-        max: undefined,
     },
     {
         fält: "weekendMidsleep",
@@ -93,7 +87,6 @@ export default function SomnPredictorPage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    screenTimeIndex: Number(värden.screenTimeIndex),
                     leisureScreenHours: Number(värden.leisureScreenHours),
                     sleepHours: Number(värden.sleepHours),
                     weekendMidsleep: Number(värden.weekendMidsleep),
