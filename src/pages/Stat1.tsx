@@ -80,6 +80,7 @@ export default function Stat1Page() {
                 body: JSON.stringify({
                     sleepQualityIndex: average,
                     averageSleepHours: averageSleepHours,
+                    sex: sex,
                 }),
             });
 

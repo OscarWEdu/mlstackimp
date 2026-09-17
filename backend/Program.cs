@@ -12,7 +12,8 @@ app.MapPost("/api/sleeppredict", (SleepRequest request) =>
 
     var bdi = Predictors.SleepBDIPrediction(
         request.SleepQualityIndex,
-        request.AverageSleepHours
+        request.AverageSleepHours,
+        request.Sex
     );
 
     return Results.Ok(new { bdi });
