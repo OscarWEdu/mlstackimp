@@ -5,6 +5,9 @@ using Microsoft.ML.Data;
 
 public class SleepInput
 {
+    [LoadColumn(1)]
+    public string sex { get; set; } = "";
+
     [LoadColumn(4)]
     public float sleep_quality_index { get; set; }
 

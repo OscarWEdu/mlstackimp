@@ -26,7 +26,7 @@ const options = [
     "Always",
 ];
 
-export default function HomePage() {
+export default function Stat1Page() {
     const [message, setMessage] = useState("Connecting...");
 
     useEffect(() => {
@@ -46,7 +46,8 @@ export default function HomePage() {
     );
 
     const [questionnaireMessage, setQuestionnaireMessage] = useState("");
-    const [averageSleepHours, setAverageSleepHours] = useState("");
+    const [averageSleepHours, setAverageSleepHours] = useState(0);
+    const [sex, setSex] = useState<string>("");
 
     function selectAnswer(questionIndex: number, answer: number) {
         setAnswers((current) => {
@@ -61,12 +62,10 @@ export default function HomePage() {
             setQuestionnaireMessage("Please answer all four questions.");
             return;
         }
-        if (averageSleepHours === "") {
-            setQuestionnaireMessage("Please answer all questions.");
+        if (!sex) {
+            setQuestionnaireMessage("Please select your sex.");
             return;
         }
-
-        const sleepHours = parseInt(averageSleepHours, 10);
 
 
         const numericAnswers: number[] = answers.filter((answer): answer is number => answer !== null);
@@ -80,7 +79,8 @@ export default function HomePage() {
                 },
                 body: JSON.stringify({
                     sleepQualityIndex: average,
-                    averageSleepHours: sleepHours,
+                    averageSleepHours: averageSleepHours,
+                    sex: sex,
                 }),
             });
 
@@ -104,20 +104,39 @@ export default function HomePage() {
             <p id="backend-response">{message}</p>
             <hr className="my-6" />
 
+            <div className="mt-4">
+                <label htmlFor="sex" className="mr-3 font-medium">
+                    Sex
+                </label>
+                <select
+                    id="sex"
+                    value={sex}
+                    onChange={(e) => setSex(e.target.value)}
+                    className="rounded border border-gray-300 px-2 py-1"
+                >
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Yes Please</option>
+                </select>
+            </div>
+
             <div className="mt-6">
                 <label htmlFor="average-sleep-hours">
-                    How many hours have you, on average, slept these last 2 weeks?
+                    How many hours per night have you, on average, slept these last 2 weeks?
                 </label>
 
                 <input
                     id="average-sleep-hours"
                     type="number"
                     min="0"
+                    max="10"
                     step="1"
                     value={averageSleepHours}
-                    onChange={(event) =>
-                        setAverageSleepHours(event.target.value)
-                    }
+                    onChange={(event) => {
+                        const value = Number(event.target.value)
+                        setAverageSleepHours(Math.min(24, Math.max(0, value)))
+                    }}
                     className="ml-3 w-20 rounded border border-gray-300 px-2 py-1"
                 />
             </div>
