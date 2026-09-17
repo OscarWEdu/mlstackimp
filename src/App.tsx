@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import "./style.css";
+import logo from "./assets/MLSTACK.png";
 
 export default function App() {
 	useLocation();
@@ -7,9 +8,7 @@ export default function App() {
 	return (
 		<div className="flex min-h-screen flex-col overflow-x-hidden">
 			<header className="flex items-center justify-between px-6 py-4">
-				<span className="font-mono text-lg font-bold tracking-tight text-primary-foreground">
-					MlStack
-				</span>
+				<img src={logo} alt="MlStack Logo" className="h-50 w-auto" />
 			</header>
 		
 			<main className="container mx-auto flex flex-1 flex-col px-4">
