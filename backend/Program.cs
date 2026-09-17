@@ -7,6 +7,9 @@ var app = builder.Build();
 
 app.MapGet("/api", () => $"R²:   {teststackscore:0.###}");
 
+// HK:s sömnkvalitets-prediktor (tränad i hk_models) – allt ligger i HKSomnPrediktor.cs.
+app.MapHKSomnPrediktor();
+
 app.MapPost("/api/sleeppredict", (SleepRequest request) =>
 {
     var bdi = Predictors.SleepBDIPrediction(

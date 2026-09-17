@@ -34,10 +34,21 @@ public static class Program
 
         var tränare = new HKTränare(csvSökväg);
 
-        // ---- 1 + 2: Träna och spara en modell per kön ----
-        tränare.TränaOchSpara(kön: "Girl", filnamn: "hk_modell_flickor.zip");
+        // ---- 1 + 2: Träna och spara en modell per kön och målkolumn ----
+        // BDI-modellerna (som hk_modell_flickor/pojkar) predikterar depressionspoängen,
+        // sömnmodellerna (hk_modell_somn_*) predikterar sömnkvalitetsindexet och används
+        // av frontend via backend-endpointen /api/somnpredict.
+        tränare.TränaOchSpara(kön: "Girl", filnamn: "hk_modell_flickor.zip",
+                              målkolumn: nameof(HKRad.bdi_total));
         Console.WriteLine();
-        tränare.TränaOchSpara(kön: "Boy", filnamn: "hk_modell_pojkar.zip");
+        tränare.TränaOchSpara(kön: "Boy", filnamn: "hk_modell_pojkar.zip",
+                              målkolumn: nameof(HKRad.bdi_total));
+        Console.WriteLine();
+        tränare.TränaOchSpara(kön: "Girl", filnamn: "hk_modell_somn_flickor.zip",
+                              målkolumn: nameof(HKRad.sleep_quality_index));
+        Console.WriteLine();
+        tränare.TränaOchSpara(kön: "Boy", filnamn: "hk_modell_somn_pojkar.zip",
+                              målkolumn: nameof(HKRad.sleep_quality_index));
 
         // ---- 3: Demonstrera att de sparade modellerna kan användas ----
         // Vi laddar in zip-filerna igen och predikterar för en påhittad elev med

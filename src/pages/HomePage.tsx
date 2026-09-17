@@ -8,6 +8,10 @@ export default function HomePage() {
 			<button onClick={() => navigate("/stat1")}>
 				Analysis 1
 			</button>
+
+			<button onClick={() => navigate("/somnpredictor")}>
+				Sömnkvalitets-prediktor
+			</button>
 		</div>
 	);
 }

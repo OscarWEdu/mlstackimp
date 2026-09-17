@@ -20,6 +20,17 @@ public sealed class HKTränare
     // Fast slumpfrö => träningen blir likadan varje gång den körs (lättare att förklara och jämföra).
     private readonly MLContext _ml = new(seed: 42);
 
+    // Alla kolumner som KAN användas som förklaringsvariabler (samma som i "HK Eda"-notebooken).
+    private static readonly string[] AllaFeatures =
+    [
+        nameof(HKRad.screen_time_index),
+        nameof(HKRad.est_leisure_screen_hours),
+        nameof(HKRad.sleep_quality_index),
+        nameof(HKRad.avg_sleep_hours),
+        nameof(HKRad.midsleep_weekend_hours),
+        nameof(HKRad.social_jetlag_hours),
+    ];
+
     /// <summary>Sökväg till datasetet (CSV-filen).</summary>
     private readonly string _csvSökväg;
 
@@ -37,7 +48,9 @@ public sealed class HKTränare
     /// </summary>
     /// <param name="kön">Vilket segment som ska tränas: "Girl" eller "Boy".</param>
     /// <param name="filnamn">Namn på zip-filen som skapas i modellmappen.</param>
-    public HKMetrik TränaOchSpara(string kön, string filnamn)
+    /// <param name="målkolumn">Vad modellen ska prediktera: bdi_total (standard)
+    /// eller sleep_quality_index för sömnkvalitetsmodellerna.</param>
+    public HKMetrik TränaOchSpara(string kön, string filnamn, string målkolumn = nameof(HKRad.bdi_total))
     {
         // ---- Steg 1: Läs in hela datasetet från CSV-filen ----
         // LoadFromTextFile använder [LoadColumn]-attributen i HKRad för att veta
@@ -61,22 +74,20 @@ public sealed class HKTränare
         var uppdelning = _ml.Data.TrainTestSplit(segmentData, testFraction: 0.2);
 
         // ---- Steg 4: Bygg pipelinen ----
-        // a) Concatenate: packar de sex förklaringsvariablerna i EN "Features"-vektor,
-        //    vilket är formatet alla ML.NET-tränare förväntar sig.
-        // b) Sdca: linjär regression (samma modelltyp som vann i notebooken).
+        // a) Features = alla förklaringsvariabler UTOM målkolumnen. Att ta bort
+        //    målet ur features är kritiskt – annars "läcker" svaret in i modellen
+        //    och den ser perfekt ut men är värdelös på riktigt data (dataläckage).
+        // b) Concatenate: packar features i EN "Features"-vektor, vilket är
+        //    formatet alla ML.NET-tränare förväntar sig.
+        // c) Sdca: linjär regression (samma modelltyp som vann i notebooken).
+        var features = AllaFeatures.Where(f => f != målkolumn).ToArray();
         var pipeline = _ml.Transforms
-            .Concatenate("Features",
-                nameof(HKRad.screen_time_index),
-                nameof(HKRad.est_leisure_screen_hours),
-                nameof(HKRad.sleep_quality_index),
-                nameof(HKRad.avg_sleep_hours),
-                nameof(HKRad.midsleep_weekend_hours),
-                nameof(HKRad.social_jetlag_hours))
+            .Concatenate("Features", features)
             .Append(_ml.Regression.Trainers.Sdca(
-                labelColumnName: nameof(HKRad.bdi_total),
+                labelColumnName: målkolumn,
                 featureColumnName: "Features"));
 
-        Console.WriteLine($"Tränar modell för {(kön == "Girl" ? "FLICKOR" : "POJKAR")} " +
+        Console.WriteLine($"Tränar modell för {(kön == "Girl" ? "FLICKOR" : "POJKAR")} (mål: {målkolumn}) " +
                           $"({segment.Count} rader, varav {(long)(segment.Count * 0.8)} till träning)...");
 
         // ---- Steg 5: Träna modellen ----
@@ -87,7 +98,7 @@ public sealed class HKTränare
         // jämför prediktionerna med de faktiska bdi_total-värdena.
         var prediktioner = modell.Transform(uppdelning.TestSet);
         var metrikFrånML = _ml.Regression.Evaluate(
-            prediktioner, labelColumnName: nameof(HKRad.bdi_total));
+            prediktioner, labelColumnName: målkolumn);
 
         var metrik = new HKMetrik
         {

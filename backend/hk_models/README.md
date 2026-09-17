@@ -16,13 +16,15 @@ cd backend/hk_models
 dotnet run
 ```
 
-Programmet tränar en modell per kön på `../screen_time_mental_health.csv`
-(4 810 rader), skriver ut RMSE/MAE/R² per segment och sparar:
+Programmet tränar en modell per kön och målkolumn på `../screen_time_mental_health.csv`
+(4 810 rader), skriver ut RMSE/MAE/R² per modell och sparar:
 
 | Fil | Innehåll |
 |---|---|
-| `Modeller/hk_modell_flickor.zip` | Modell tränad på flickorna (~2 364 rader) |
-| `Modeller/hk_modell_pojkar.zip` | Modell tränad på pojkarna (~2 446 rader) |
+| `Modeller/hk_modell_flickor.zip` | BDI-modell tränad på flickorna (~2 364 rader) |
+| `Modeller/hk_modell_pojkar.zip` | BDI-modell tränad på pojkarna (~2 446 rader) |
+| `Modeller/hk_modell_somn_flickor.zip` | Sömnkvalitetsmodell (flickor) – används av `/api/somnpredict` |
+| `Modeller/hk_modell_somn_pojkar.zip` | Sömnkvalitetsmodell (pojkar) – används av `/api/somnpredict` |
 
 Förväntade värden (samma modelltyp och uppdelning som i notebooken):
 RMSE ≈ 7,8–8,2 (flickor) respektive ≈ 4,9–5,4 (pojkar), R² ≈ 0,12–0,16.
@@ -41,10 +43,16 @@ notebookens "Tolkning av utvärderingen" för varför.
 
 ## Hur frontend använder modellen
 
-Modellerna konsumeras via backend-API:t (en .NET-tjänst laddar zip-filen och
-exponerar en endpoint). Eftersom webbprojektet redan refererar Microsoft.ML
-racker det att t.ex. lägga följande i webbprojektet (gör det i EN egen fil,
-inte i andras):
+**Sömnkvalitetsmodellerna är redan kopplade:** backend-filen `HKSomnPrediktor.cs`
+(backend-roten) exponerar `POST /api/somnpredict` som tar emot
+`{ screenTimeIndex, leisureScreenHours, sleepHours, weekendMidsleep, socialJetlag, kon }`
+(där `kon` är `"flicka"` eller `"pojke"`) och svarar med
+`{ kon, sleepQuality }` (lägre värde = bättre sömn). Frontend-sidan är
+`src/pages/SomnPredictor.tsx` (route `/somnpredictor`).
+
+För BDI-modellerna: webbprojektet refererar det här projektet via `ProjectReference`
+i `backend.csproj`, så `HKModels.HKPrediktor` kan användas direkt i webbkod. Exempel
+på en endpoint i webbprojektet (gör det i EN egen fil, inte i andras):
 
 ```csharp
 // Ladda vid start (sökvägen pekar mot hk_models/Modeller)
@@ -69,4 +77,6 @@ skapa en prediktion per anrop eller använd ML.NET:s `PredictionEnginePool`.
 - Kolumnen `depressed` används inte – den hänger ihop med BDI och skulle
   läcka målet in i modellen.
 - Träningen har fast slumpfrö (42) och blir därmed reproducerbar.
+- När målkolumnen är `sleep_quality_index` utesluts den automatiskt ur
+  feature-listan i tränaren – annars skulle modellen "fuska" (dataläckage).
 - Vill du träna på annan data: `dotnet run -- <sökväg-till-csv>`.

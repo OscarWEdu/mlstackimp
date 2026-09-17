@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
+    <!-- Ger webbprojektet tillgång till HKPrediktor (sparade modeller laddas i HKSomnPrediktor.cs) -->
+    <ProjectReference Include="hk_models\hk_models.csproj" />
   </ItemGroup>
 
 </Project>
