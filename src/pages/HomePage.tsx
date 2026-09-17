@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import SleepChart from "../components/SleepChart";
 
 export default function HomePage() {
 	const navigate = useNavigate();
@@ -52,6 +53,17 @@ export default function HomePage() {
 				))}
 
 		</section>
+
+				<section className="rounded-xl border border-[var(--border)] p-6">
+			<h2 className="font-semibold text-[var(--text-h)]">
+				Sömnkvalitet vs depression
+			</h2>
+			<p className="text-sm">
+				Vad vår modell förutspår, jämfört med vad som faktiskt uppmättes. Grupper med färre än 20 personer visas inte.
+			</p>
+			<SleepChart />
+		</section>
+
 		
 		</div>
 		
