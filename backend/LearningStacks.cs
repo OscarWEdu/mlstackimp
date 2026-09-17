@@ -9,6 +9,8 @@ public static class LearningStacks
 
     // Define paths for saving models below here: 
     public static string SleepTrainerModelPath => Path.Combine(AppContext.BaseDirectory, "sleepmodel.zip");
+    public static string SleepTrainerFemaleModelPath => Path.Combine(AppContext.BaseDirectory, "sleepmodelF.zip");
+    public static string SleepTrainerMaleModelPath => Path.Combine(AppContext.BaseDirectory, "sleepmodelM.zip");
 
     // Example method, includes methods for validation, as well as both saving and loading.
     // For simple training, only steps 1, 2, 4, 5, and 8, are needed.
@@ -61,8 +63,12 @@ public static class LearningStacks
         var trainingData = ctx.Data.CreateEnumerable<SleepInput>(dataset, reuseRowObject: false).ToList();
 
         var allData = ctx.Data.LoadFromEnumerable(trainingData);
+        var boysData = ctx.Data.LoadFromEnumerable(trainingData.Where(x => x.sex == "Boy"));
+        var girlsData = ctx.Data.LoadFromEnumerable(trainingData.Where(x => x.sex == "Girl"));
 
         TrainSleepModel(ctx, allData, SleepTrainerModelPath);
+        TrainSleepModel(ctx, boysData, SleepTrainerMaleModelPath);
+        TrainSleepModel(ctx, girlsData, SleepTrainerFemaleModelPath);
     }
 
     // Function carrying out the actual training of the sleep models.
