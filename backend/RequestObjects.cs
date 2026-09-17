@@ -3,5 +3,6 @@ namespace mlstack;
 
 public record SleepRequest(
     double SleepQualityIndex,
-    int AverageSleepHours
+    int AverageSleepHours,
+    string Sex
 );

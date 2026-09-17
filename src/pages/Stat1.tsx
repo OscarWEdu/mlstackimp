@@ -26,7 +26,7 @@ const options = [
     "Always",
 ];
 
-export default function HomePage() {
+export default function Stat1Page() {
     const [message, setMessage] = useState("Connecting...");
 
     useEffect(() => {
@@ -47,6 +47,7 @@ export default function HomePage() {
 
     const [questionnaireMessage, setQuestionnaireMessage] = useState("");
     const [averageSleepHours, setAverageSleepHours] = useState(0);
+    const [sex, setSex] = useState<string>("");
 
     function selectAnswer(questionIndex: number, answer: number) {
         setAnswers((current) => {
@@ -59,6 +60,10 @@ export default function HomePage() {
     async function finishQuestionnaire() {
         if (answers.some((answer) => answer === null)) {
             setQuestionnaireMessage("Please answer all four questions.");
+            return;
+        }
+        if (!sex) {
+            setQuestionnaireMessage("Please select your sex.");
             return;
         }
 
@@ -75,6 +80,7 @@ export default function HomePage() {
                 body: JSON.stringify({
                     sleepQualityIndex: average,
                     averageSleepHours: averageSleepHours,
+                    sex: sex,
                 }),
             });
 
@@ -97,6 +103,23 @@ export default function HomePage() {
         <section id="center">
             <p id="backend-response">{message}</p>
             <hr className="my-6" />
+
+            <div className="mt-4">
+                <label htmlFor="sex" className="mr-3 font-medium">
+                    Sex
+                </label>
+                <select
+                    id="sex"
+                    value={sex}
+                    onChange={(e) => setSex(e.target.value)}
+                    className="rounded border border-gray-300 px-2 py-1"
+                >
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Yes Please</option>
+                </select>
+            </div>
 
             <div className="mt-6">
                 <label htmlFor="average-sleep-hours">
