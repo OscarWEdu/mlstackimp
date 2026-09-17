@@ -5,7 +5,7 @@ using Microsoft.ML.Data;
 
 public class SleepInput
 {
-    [LoadColumn(2)]
+    [LoadColumn(1)]
     public string sex { get; set; } = "";
 
     [LoadColumn(4)]
