@@ -7,7 +7,7 @@ export default function App() {
 
 	return (
 		<div className="flex min-h-screen flex-col overflow-x-hidden">
-			<header className="flex items-center justify-between px-6 py-4">
+			<header className="flex items-center justify-between px-6  border-b-2">
 				<img src={logo} alt="MlStack Logo" className="h-20 w-auto" />
 			</header>
 		
