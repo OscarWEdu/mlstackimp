@@ -26,7 +26,7 @@ const options = [
     "Always",
 ];
 
-export default function HomePage() {
+export default function Stat1Page() {
     const [message, setMessage] = useState("Connecting...");
 
     useEffect(() => {
