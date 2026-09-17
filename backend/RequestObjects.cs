@@ -11,3 +11,8 @@ public record SleepObservedPoint(
     double MeanBdi,
     int Count
 );
+
+public record SleepCurvePoint(
+    double SleepQualityIndex,
+    double MeanBdi
+);
