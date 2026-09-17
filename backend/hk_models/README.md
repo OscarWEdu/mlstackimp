@@ -42,7 +42,7 @@ notebookens "Tolkning av utvärderingen" för varför.
 
 | Fil | Vad den gör |
 |---|---|
-| `Program.cs` | Startpunkt: tränar båda modellerna, sparar zip-filer, gör en exempelprediktion mot varje sparad fil |
+| `TränaModeller.cs` | Startpunkt: tränar båda modellerna, sparar zip-filer, gör en exempelprediktion mot varje sparad fil |
 | `HKRad.cs` | En rad i CSV-filen; `[LoadColumn]`-attribut kopplar egenskaper till kolumner |
 | `HKTränare.cs` | Pipeline: filtrera kön → 80/20-uppdelning → linjär regression (SDCA) → utvärdera → spara |
 | `HKPrediktor.cs` | Laddar en sparad .zip och predikterar BDI för en person. **Detta är ingången för frontend-användning** |

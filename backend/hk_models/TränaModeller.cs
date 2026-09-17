@@ -15,7 +15,7 @@ namespace HKModels;
 
 using System.Text;
 
-public static class Program
+public static class TränaModeller
 {
     public static void Main(string[] args)
     {
