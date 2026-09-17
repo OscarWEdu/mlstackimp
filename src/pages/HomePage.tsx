@@ -2,6 +2,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
 	const navigate = useNavigate();
+	
+	const analyses = [
+	{ title: "Sömn → BDI", beskrivning: "4 frågor · ~1 min", path: "/stat1" },
+	{ title: "Skärmtid", beskrivning: "Kommer snart", path: null },
+	{ title: "(nästa)", beskrivning: "Kommer snart", path: null },
+];
+
 
 	return (
 		<div className="flex flex-col gap-6 py-6">
@@ -25,6 +32,25 @@ export default function HomePage() {
 
 			<div className="p-4">
 		</div>
+		</section>
+
+		<section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			{analyses.map((a) => (
+					<article
+						key={a.title}
+						onClick={() => a.path && navigate(a.path)}
+						className={`flex items-center justify-between gap-4 rounded-xl border border-[var(--border)] p-5 ${
+							a.path ? "cursor-pointer hover:border-[var(--accent-border)]" : "opacity-60"
+						}`}
+					>
+						<div>
+							<h2 className="font-semibold text-[var(--text-h)]">{a.title}</h2>
+							<p className="text-sm">{a.beskrivning}</p>
+						</div>
+						<div className="h-12 w-20 shrink-0 rounded bg-[var(--accent-bg)]" />
+					</article>
+				))}
+
 		</section>
 		
 		</div>
