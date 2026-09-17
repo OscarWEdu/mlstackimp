@@ -12,6 +12,12 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
+    /* Chart colors, checked for colorblind separation and contrast against --bg */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --chart-axis: #c4c2c9;
+
+
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
@@ -44,6 +50,11 @@
     --social-bg: rgba(47, 48, 58, 0.5);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --chart-axis: #3a3c47;
+
   }
 
   #social .button-icon {
