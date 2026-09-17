@@ -11,7 +11,7 @@ public static class LearningStacks
     public static string SleepTrainerModelPath => Path.Combine(AppContext.BaseDirectory, "sleepmodel.zip");
 
     // Example method, includes methods for validation, as well as both saving and loading.
-    // For a more minimal example of training, without validation, see SleepTrainer()
+    // For simple training, only steps 1, 2, 4, 5, and 8, are needed.
     public static double ExampleTrainer()
     {
         //Step 1. Create an ML Context
@@ -57,17 +57,25 @@ public static class LearningStacks
     {
         var ctx = new MLContext();
 
-        IDataView trainingData = ctx.Data.LoadFromTextFile<SleepInput>(dataPath, hasHeader: true, separatorChar: ',');
+        IDataView dataset = ctx.Data.LoadFromTextFile<SleepInput>(dataPath, hasHeader: true, separatorChar: ',');
+        var trainingData = ctx.Data.CreateEnumerable<SleepInput>(dataset, reuseRowObject: false).ToList();
 
-        //Build the data processing and training pipeline
-        var pipeline = ctx.Transforms
+        var allData = ctx.Data.LoadFromEnumerable(trainingData);
+
+        TrainSleepModel(ctx, allData, SleepTrainerModelPath);
+    }
+
+    // Function carrying out the actual training of the sleep models.
+    private static void TrainSleepModel(MLContext ctx, IDataView trainingData, string modelPath)
+    {
+        var pipeline = ctx.Transforms //Build the data processing and training pipeline
             .Concatenate("Features",
                 nameof(SleepInput.sleep_quality_index),
                 nameof(SleepInput.avg_sleep_hours))
             .Append(ctx.Regression.Trainers.Sdca(
                 labelColumnName: nameof(SleepInput.bdi_total)));
 
-        ITransformer trainedModel = pipeline.Fit(trainingData);
-        ctx.Model.Save(trainedModel, trainingData.Schema, SleepTrainerModelPath);
+        var trainedModel = pipeline.Fit(trainingData);
+        ctx.Model.Save(trainedModel, trainingData.Schema, modelPath);
     }
 }
