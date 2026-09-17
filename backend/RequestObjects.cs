@@ -3,7 +3,8 @@ namespace mlstack;
 
 public record SleepRequest(
     double SleepQualityIndex,
-    int AverageSleepHours
+    int AverageSleepHours,
+    string Sex
 );
 
 public record SleepObservedPoint(
@@ -14,5 +15,5 @@ public record SleepObservedPoint(
 
 public record SleepCurvePoint(
     double SleepQualityIndex,
-    double MeanBdi
+    double Bdi
 );
