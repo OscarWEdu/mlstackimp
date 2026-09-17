@@ -11,10 +11,17 @@ behövs eller ändras av det här projektet.
 
 ## Kom igång
 
+Modellerna kan tränas manuellt:
+
 ```bash
 cd backend/hk_models
 dotnet run
 ```
+
+**Men det behövs oftast inte:** backend (`HKSomnPrediktor.cs`) tränar automatiskt de
+sömnmodeller som saknas när den startas — så ett fräscht repo-klon räcker med att bara
+köra `npm run dev`. Träningen har fast frö (42) och blir därmed identisk oavsett vem
+som kör den.
 
 Programmet tränar en modell per kön och målkolumn på `../screen_time_mental_health.csv`
 (4 810 rader), skriver ut RMSE/MAE/R² per modell och sparar:
@@ -81,7 +88,8 @@ skapa en prediktion per anrop eller använd ML.NET:s `PredictionEnginePool`.
   (Beck Depression Inventory), inte uträknat från övriga kolumner.
 - Kolumnen `depressed` används inte – den hänger ihop med BDI och skulle
   läcka målet in i modellen.
-- Träningen har fast slumpfrö (42) och blir därmed reproducerbar.
+- Träningen har fast slumpfrö (42) och blir därmed reproducerbar — även den
+  automatiska träningen vid backend-start ger identiska modeller.
 - När målkolumnen är `sleep_quality_index` utesluts den automatiskt ur
   feature-listan i tränaren – annars skulle modellen "fuska" (dataläckage).
 - Vill du träna på annan data: `dotnet run -- <sökväg-till-csv>`.

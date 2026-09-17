@@ -19,27 +19,56 @@ public static class HKSomnPrediktor
 {
     // Hjälpare som hittar modellfilerna oavsett varifrån backend startas
     // (från repo-roten via "dotnet run --project backend" eller från backend/).
-    private static string HittaModellsökväg(string filnamn)
+    // Alla modeller skapas/laddas från träningsprojektets Modeller-mapp.
+    private static readonly string ModellMapp = BestämModellmapp();
+
+    private static string BestämModellmapp()
     {
-        // Alternativ 1: relativt aktuell katalog (backend/)
-        var relativt = Path.Combine("hk_models", "Modeller", filnamn);
-        if (File.Exists(relativt)) return relativt;
-
-        // Alternativ 2: relativt programmappen (bin/Debug/net10.0/ -> tre steg upp)
+        // Primärt: programmappen -> tre steg upp (bin/Debug/net10.0 -> backend) -> hk_models/Modeller
         var frånProgram = Path.GetFullPath(
-            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "hk_models", "Modeller", filnamn));
-        if (File.Exists(frånProgram)) return frånProgram;
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "hk_models", "Modeller"));
+        if (Directory.Exists(frånProgram)) return frånProgram;
 
-        throw new FileNotFoundException(
-            $"Hittar inte modellfilen '{filnamn}'. Kör 'dotnet run' i backend/hk_models för att träna och spara modellerna först.");
+        // Alternativ: relativt aktuell katalog
+        var relativt = Path.GetFullPath(Path.Combine("hk_models", "Modeller"));
+        if (Directory.Exists(relativt)) return relativt;
+
+        // Saknas allt (ny klon): skapa mappen på standardplatsen vid första träningen.
+        return frånProgram;
+    }
+
+    private static string Modellfil(string filnamn) => Path.Combine(ModellMapp, filnamn);
+
+    /// <summary>
+    /// Tränar en modell OM zip-filen saknas (t.ex. efter en färsk klon av repot,
+    /// eftersom *.zip är git-ignorerat). Träningen har fast frö (42) i HKTränare,
+    /// så den automatiskt tränade modellen blir identisk med en manuellt tränad.
+    /// </summary>
+    private static void SäkerställTränad(string filnamn, string kön)
+    {
+        if (File.Exists(Modellfil(filnamn))) return;
+
+        Console.WriteLine($"[HKSomnPrediktor] {filnamn} saknas – tränar automatiskt " +
+                          "(tar någon minut första gången)...");
+        var csvSökväg = Path.GetFullPath(
+            Path.Combine(ModellMapp, "..", "..", "screen_time_mental_health.csv"));
+        new HKTränare(csvSökväg, ModellMapp)
+            .TränaOchSpara(kön, filnamn, målkolumn: nameof(HKRad.sleep_quality_index));
     }
 
     // Laddar de två sparade sömnkvalitetsmodellerna (en flickmodell, en pojkmodell).
-    private static readonly HKPrediktor Flickor =
-        HKPrediktor.Ladda(HittaModellsökväg("hk_modell_somn_flickor.zip"));
+    // Initieras i den statiska konstruktorn så att ev. automatisk träning hinner
+    // ske FÖRE inladdningen.
+    private static readonly HKPrediktor Flickor;
+    private static readonly HKPrediktor Pojkar;
 
-    private static readonly HKPrediktor Pojkar =
-        HKPrediktor.Ladda(HittaModellsökväg("hk_modell_somn_pojkar.zip"));
+    static HKSomnPrediktor()
+    {
+        SäkerställTränad("hk_modell_somn_flickor.zip", "Girl");
+        SäkerställTränad("hk_modell_somn_pojkar.zip", "Boy");
+        Flickor = HKPrediktor.Ladda(Modellfil("hk_modell_somn_flickor.zip"));
+        Pojkar = HKPrediktor.Ladda(Modellfil("hk_modell_somn_pojkar.zip"));
+    }
 
     /// <summary>
     /// Registrerar endpointen. Anropas från Program.cs med: app.MapHKSomnPrediktor();
