@@ -22,4 +22,19 @@ app.MapPost("/api/sleeppredict", (SleepRequest request) =>
     return Results.Ok(new { bdi });
 });
 
+app.MapPost("/api/lifestylepredict", (LifestyleRequest request) =>
+{
+    //Trains associated models if a dump of them doesn't already exist
+    if (!File.Exists(LearningStacks.LifestyleModelPath) || !File.Exists(LearningStacks.LifestyleMaleModelPath) || !File.Exists(LearningStacks.LifestyleFemaleModelPath)) { LearningStacks.LifestyleTrainer(); }
+
+    var bdi = Predictors.LifestyleBDIPrediction(
+        request.ScreenTimeIndex,
+        request.SleepQualityIndex,
+        request.AverageSleepHours,
+        request.Sex
+    );
+
+    return Results.Ok(new { bdi });
+});
+
 app.Run();
