@@ -7,7 +7,7 @@ public record SleepRequest(
     string Sex
 );
 public record LifestyleRequest(
-    double ScreenTimeIndex,
+    double LeisureScreenHours,
     double SleepQualityIndex,
     double AverageSleepHours,
     string Sex

@@ -28,7 +28,7 @@ app.MapPost("/api/lifestylepredict", (LifestyleRequest request) =>
     if (!File.Exists(LearningStacks.LifestyleModelPath) || !File.Exists(LearningStacks.LifestyleMaleModelPath) || !File.Exists(LearningStacks.LifestyleFemaleModelPath)) { LearningStacks.LifestyleTrainer(); }
 
     var bdi = Predictors.LifestyleBDIPrediction(
-        request.ScreenTimeIndex,
+        request.LeisureScreenHours,
         request.SleepQualityIndex,
         request.AverageSleepHours,
         request.Sex

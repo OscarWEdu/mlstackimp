@@ -32,12 +32,12 @@ public static class Predictors
         return prediction.Score;
     }
 
-    //Predicts BDI based on screen_time_index, sleep_quality_index, and avg_sleep_hours
-    public static float LifestyleBDIPrediction(double screenTimeIndex, double sleepQualityIndex, double averageSleepHours, string sex)
+    //Predicts BDI based on est_leisure_screen_hours, sleep_quality_index, and avg_sleep_hours
+    public static float LifestyleBDIPrediction(double leisureScreenHours, double sleepQualityIndex, double averageSleepHours, string sex)
     {
         var input = new SleepInput
         {
-            screen_time_index = (float)screenTimeIndex,
+            est_leisure_screen_hours = (float)leisureScreenHours,
             sleep_quality_index = (float)sleepQualityIndex,
             avg_sleep_hours = (float)averageSleepHours
         };

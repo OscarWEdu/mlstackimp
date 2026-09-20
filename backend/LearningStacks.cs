@@ -89,7 +89,7 @@ public static class LearningStacks
         ctx.Model.Save(trainedModel, trainingData.Schema, modelPath);
     }
 
-    // Predicts BDI based on screen_time_index, sleep_quality_index, and avg_sleep_hours.
+    // Predicts BDI based on est_leisure_screen_hours, sleep_quality_index, and avg_sleep_hours.
     // Prediction performed by LifestyleBDIPrediction.
     public static void LifestyleTrainer()
     {
@@ -112,7 +112,7 @@ public static class LearningStacks
     {
         var pipeline = ctx.Transforms
             .Concatenate("Features",
-                nameof(SleepInput.screen_time_index),
+                nameof(SleepInput.est_leisure_screen_hours),
                 nameof(SleepInput.sleep_quality_index),
                 nameof(SleepInput.avg_sleep_hours))
             .Append(ctx.Regression.Trainers.Sdca(
