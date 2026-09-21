@@ -121,4 +121,24 @@ public static class LearningStacks
         var trainedModel = pipeline.Fit(trainingData);
         ctx.Model.Save(trainedModel, trainingData.Schema, modelPath);
     }
+
+    public static (List<SleepObservedPoint> Observed, double MedianSleepHours) SleepObservedMeans(int minCount)
+    {
+        var ctx = new MLContext();
+
+        IDataView data = ctx.Data.LoadFromTextFile<SleepInput>(dataPath, hasHeader: true, separatorChar: ',');
+        var rows = ctx.Data.CreateEnumerable<SleepInput>(data, reuseRowObject: false).ToList();
+
+        var observed = rows
+            .GroupBy(r => r.sleep_quality_index)
+            .Where(g=> g.Count() >= minCount)
+            .OrderBy(g => g.Key)
+            .Select(g => new SleepObservedPoint(g.Key, g.Average(r => r.bdi_total), g.Count()))
+            .ToList();
+
+        var sleepHours = rows.Select(r => (double)r.avg_sleep_hours).Order().ToList();
+        double median = (sleepHours[(sleepHours.Count - 1) / 2] + sleepHours[sleepHours.Count / 2]) / 2;
+
+        return (observed, Math.Round(median, 2));
+    }
 }

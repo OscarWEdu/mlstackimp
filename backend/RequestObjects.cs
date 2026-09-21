@@ -6,6 +6,17 @@ public record SleepRequest(
     int AverageSleepHours,
     string Sex
 );
+public record SleepObservedPoint(
+    double SleepQualityIndex,
+    double MeanBdi,
+    int Count
+);
+
+public record SleepCurvePoint(
+    double SleepQualityIndex,
+    double Bdi
+);
+
 public record LifestyleRequest(
     double LeisureScreenHours,
     double SleepQualityIndex,

@@ -22,6 +22,18 @@ app.MapPost("/api/sleeppredict", (SleepRequest request) =>
     return Results.Ok(new { bdi });
 });
 
+app.MapGet("/api/sleepcurve", () =>
+{
+    //Trains associated model if a dump of it doesn't already exist
+    if (!File.Exists(LearningStacks.SleepTrainerModelPath) || !File.Exists(LearningStacks.SleepTrainerMaleModelPath) || !File.Exists(LearningStacks.SleepTrainerFemaleModelPath)) { LearningStacks.SleepTrainer(); }
+
+    //The model line is drawn at the median sleep duration, so it sits in the middle of the data
+    var (observed, medianSleepHours) = LearningStacks.SleepObservedMeans(minCount: 20);
+    var predicted = Predictors.SleepBDICurve(medianSleepHours);
+
+    return Results.Ok(new { sleepHours = medianSleepHours, predicted, observed });
+});
+
 app.MapPost("/api/lifestylepredict", (LifestyleRequest request) =>
 {
     //Trains associated models if a dump of them doesn't already exist

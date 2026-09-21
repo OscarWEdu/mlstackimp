@@ -32,6 +32,27 @@ public static class Predictors
         return prediction.Score;
     }
 
+    public static List<SleepCurvePoint> SleepBDICurve(double averageSleepHours)
+    {
+        string modelPath = LearningStacks.SleepTrainerModelPath; //All saved model paths should be defined in LearningStacks
+        var ctx = new MLContext();
+        ITransformer model = ctx.Model.Load(modelPath, out _); //Gets model
+        var predictionEngine = ctx.Model.CreatePredictionEngine<SleepInput, SinglePrediction>(model);
+
+        var points = new List<SleepCurvePoint>();
+        for (int step = 0; step <= 20; step++)
+        {
+            double sleepQualityIndex = 1.0 + step * 0.25; //Integer steps, so the x values don't drift from floating point addition
+            var input = new SleepInput
+            {
+                sleep_quality_index = (float)sleepQualityIndex,
+                avg_sleep_hours = (float)averageSleepHours
+            };
+            points.Add(new SleepCurvePoint(sleepQualityIndex, predictionEngine.Predict(input).Score));
+        }
+        return points;
+    }
+
     //Predicts BDI based on est_leisure_screen_hours, sleep_quality_index, and avg_sleep_hours
     public static float LifestyleBDIPrediction(double leisureScreenHours, double sleepQualityIndex, double averageSleepHours, string sex)
     {
