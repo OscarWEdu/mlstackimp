@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import SleepChart from "../components/SleepChart";
+import { Activity, BedDouble, Moon } from "lucide-react";
 
 export default function HomePage() {
 	const navigate = useNavigate();
 	
 	const analyses = [
-	{ title: "Sömn → BDI", beskrivning: "4 frågor · ~1 min", path: "/stat1" },
-	{ title: "Sömnkvalitets-prediktor", beskrivning: "Skattar din sömnkvalitet", path: "/somnpredictor" },
-	{ title: "Livsstils-prediktor", beskrivning: "Sömn och skärmtid", path: "/lifestyle" },
+	{ title: "Sömn → BDI", beskrivning: "4 frågor · ~1 min", path: "/stat1", icon: Moon },
+	{ title: "Sömnkvalitets-prediktor", beskrivning: "Skattar din sömnkvalitet", path: "/somnpredictor", icon: BedDouble },
+	{ title: "Livsstils-prediktor", beskrivning: "Sömn och skärmtid", path: "/lifestyle", icon: Activity },
 ];
 
 
@@ -48,7 +49,9 @@ export default function HomePage() {
 							<h2 className="font-semibold text-[var(--text-h)]">{a.title}</h2>
 							<p className="text-sm">{a.beskrivning}</p>
 						</div>
-						<div className="h-12 w-20 shrink-0 rounded bg-[var(--accent-bg)]" />
+						<div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-bg)] text-[var(--accent)]">
+							<a.icon className="size-6" strokeWidth={1.5} aria-hidden="true" />
+						</div>
 					</article>
 				))}
 
