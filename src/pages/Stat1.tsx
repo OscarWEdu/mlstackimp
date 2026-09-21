@@ -72,7 +72,7 @@ export default function Stat1Page() {
                 data.bdi <= 28 ? "måttlig" : "svår";
 
             setQuestionnaireMessage(
-                `Predikterad BDI-poäng: ${data.bdi.toFixed(1)} av 63 – ${level} nivå av depressiva symptom`
+                `Beck Depression Inventory-II Score: ${data.bdi.toFixed(1)} of 63 - ${level} estimated depression.`
             );
         } catch (error) {
             setQuestionnaireMessage(`Backend error: ${error}`);
@@ -85,7 +85,7 @@ export default function Stat1Page() {
             <div className="w-full max-w-2xl">
                 <div className="mt-4 rounded border-2 border-yellow-400 bg-yellow-50 px-4 py-3 text-sm">
                     <strong>Beware: This is not medical advice.</strong>
-                    The results given here are a prediction based on a model trained on 
+                    The results given here is a prediction based on a model trained on 
                     snapshot of self reported data from 4 810 youths between 12-16 and
                     may not be an accurate representation of the general population.
                     If you or anyone you know suffers from depression, please contact
