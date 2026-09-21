@@ -81,8 +81,9 @@ export default function Stat1Page() {
     }
 
     return (
-        <section id="center" className="w-full m-8">
+        <section id="center" className="w-full m-16">
             <div className="w-full max-w-2xl">
+                <h1 className="text-2xl font-bold">Depression Predictor</h1>
                 <div className="mt-4 rounded border-2 border-yellow-400 bg-yellow-50 px-4 py-3 text-sm">
                     <strong>Beware: This is not medical advice.</strong>
                     The results given here is a prediction based on a model trained on 
