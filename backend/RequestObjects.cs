@@ -6,3 +6,9 @@ public record SleepRequest(
     int AverageSleepHours,
     string Sex
 );
+public record LifestyleRequest(
+    double LeisureScreenHours,
+    double SleepQualityIndex,
+    double AverageSleepHours,
+    string Sex
+);
