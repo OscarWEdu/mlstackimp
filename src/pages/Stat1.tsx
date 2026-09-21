@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const questions = [
     "Repeated awakenings (with difficulties going back to sleep):",
