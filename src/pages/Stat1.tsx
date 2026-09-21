@@ -81,7 +81,7 @@ export default function Stat1Page() {
     }
 
     return (
-        <section id="center" className="w-full m-16">
+        <section id="center" className="w-full p-16">
             <div className="w-full max-w-2xl">
                 <h1 className="text-2xl font-bold">Depression Predictor</h1>
                 <div className="mt-4 rounded border-2 border-yellow-400 bg-yellow-50 px-4 py-3 text-sm">
@@ -134,15 +134,14 @@ export default function Stat1Page() {
                 Please answer the following questions about the quality of your sleep:
             </label>
             <div className="w-full overflow-x-auto">
-                <div className="min-w-200">
+                <div className="min-w-180 mx-auto">
 
                     <div className="grid grid-cols-7 border-b-2 border-gray-300">
                         <div />
-
                         {options.map((option) => (
                             <div
                                 key={option}
-                                className="px-2 pb-3 text-center text-sm font-semibold"
+                                className="px-2 pb-3 text-center text-m font-semibold"
                             >
                                 {option}
                             </div>
@@ -152,7 +151,7 @@ export default function Stat1Page() {
                     {questions.map((question, questionIndex) => (
                         <div
                             key={question}
-                            className="grid grid-cols-7 items-center py-4"
+                            className="grid grid-cols-7 items-center py-3"
                         >
                             <div className="pr-4">
                                 {question}
