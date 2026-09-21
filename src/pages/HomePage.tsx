@@ -6,8 +6,8 @@ export default function HomePage() {
 	
 	const analyses = [
 	{ title: "Sömn → BDI", beskrivning: "4 frågor · ~1 min", path: "/stat1" },
-	{ title: "Skärmtid", beskrivning: "Kommer snart", path: null },
-	{ title: "(nästa)", beskrivning: "Kommer snart", path: null },
+	{ title: "Sömnkvalitets-prediktor", beskrivning: "Skattar din sömnkvalitet", path: "/somnpredictor" },
+	{ title: "Livsstils-prediktor", beskrivning: "Sömn och skärmtid", path: "/lifestyle" },
 ];
 
 

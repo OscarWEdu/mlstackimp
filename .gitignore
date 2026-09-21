@@ -9,6 +9,9 @@
 # model files (.zip)
 *.zip
 
+# vite production build output
+dist/
+
 # User-specific files
 *.rsuser
 *.suo

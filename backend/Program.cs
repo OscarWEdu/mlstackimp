@@ -5,6 +5,9 @@ var app = builder.Build();
 
 app.MapGet("/api", () => "Test Call");
 
+// HK:s sömnkvalitets-prediktor (tränad i hk_models) – allt ligger i HKSomnPrediktor.cs.
+app.MapHKSomnPrediktor();
+
 app.MapPost("/api/sleeppredict", (SleepRequest request) =>
 {
     //Trains associated model if a dump of it doesn't already exist
@@ -31,5 +34,19 @@ app.MapGet("/api/sleepcurve", () =>
     return Results.Ok(new { sleepHours = medianSleepHours, predicted, observed });
 });
 
+app.MapPost("/api/lifestylepredict", (LifestyleRequest request) =>
+{
+    //Trains associated models if a dump of them doesn't already exist
+    if (!File.Exists(LearningStacks.LifestyleModelPath) || !File.Exists(LearningStacks.LifestyleMaleModelPath) || !File.Exists(LearningStacks.LifestyleFemaleModelPath)) { LearningStacks.LifestyleTrainer(); }
+
+    var bdi = Predictors.LifestyleBDIPrediction(
+        request.LeisureScreenHours,
+        request.SleepQualityIndex,
+        request.AverageSleepHours,
+        request.Sex
+    );
+
+    return Results.Ok(new { bdi });
+});
 
 app.Run();
