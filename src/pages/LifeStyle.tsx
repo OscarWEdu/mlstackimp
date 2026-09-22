@@ -31,9 +31,9 @@ export default function LifestylePage() {
             const data: { bdi: number; } = await response.json();
 
             const level =
-                data.bdi < 14 ? "minimal" :
-                    data.bdi < 20 ? "mild" :
-                        data.bdi < 29 ? "måttlig" : "svår";
+                data.bdi <= 13 ? "minimal" :
+                data.bdi <= 19 ? "mild" :
+                data.bdi <= 28 ? "måttlig" : "svår";
 
             setResult(`Predikterad BDI-poäng: ${data.bdi.toFixed(1)} av 63 – ${level} nivå av depressiva symptom`);
         } catch (error) {

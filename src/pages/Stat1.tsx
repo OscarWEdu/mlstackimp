@@ -1,14 +1,4 @@
-import { useEffect, useState } from "react";
-
-async function getBackendResponse(): Promise<string> {
-    const response = await fetch("/api");
-
-    if (!response.ok) {
-        throw new Error(`Backend returned ${response.status}`);
-    }
-
-    return await response.text();
-}
+import { useState } from "react";
 
 const questions = [
     "Repeated awakenings (with difficulties going back to sleep):",
@@ -27,20 +17,6 @@ const options = [
 ];
 
 export default function Stat1Page() {
-    const [message, setMessage] = useState("Connecting...");
-
-    useEffect(() => {
-        getBackendResponse()
-            .then((data) => {
-                setMessage(`Backend response: ${data}`);
-            })
-            .catch((error) => {
-                setMessage(`Backend error: ${error}`);
-                console.error(error);
-            });
-        }, []
-    );
-
     const [answers, setAnswers] = useState<(number | null)[]>(
         Array(questions.length).fill(null)
     );
@@ -90,8 +66,13 @@ export default function Stat1Page() {
 
             const data: { bdi: number } = await response.json();
 
+            const level =
+                data.bdi <= 13 ? "minimal" :
+                data.bdi <= 19 ? "mild" :
+                data.bdi <= 28 ? "måttlig" : "svår";
+
             setQuestionnaireMessage(
-                `BDI: ${data.bdi.toFixed(2)}`
+                `Beck Depression Inventory-II Score: ${data.bdi.toFixed(1)} of 63 - ${level} estimated depression.`
             );
         } catch (error) {
             setQuestionnaireMessage(`Backend error: ${error}`);
@@ -100,13 +81,21 @@ export default function Stat1Page() {
     }
 
     return (
-        <section id="center">
-            <p id="backend-response">{message}</p>
-            <hr className="my-6" />
-
+        <section id="center" className="w-full p-16">
+            <div className="w-full max-w-2xl">
+                <h1 className="text-2xl font-bold">Depression Predictor</h1>
+                <div className="mt-4 rounded border-2 border-yellow-400 bg-yellow-50 px-4 py-3 text-sm">
+                    <strong>Beware: This is not medical advice.</strong>
+                    The results given here is a prediction based on a model trained on 
+                    snapshot of self reported data from 4 810 youths between 12-16 and
+                    may not be an accurate representation of the general population.
+                    If you or anyone you know suffers from depression, please contact
+                    your local healthcare provider.
+                </div>
+            </div>
             <div className="mt-4">
                 <label htmlFor="sex" className="mr-3 font-medium">
-                    Sex
+                    Gender
                 </label>
                 <select
                     id="sex"
@@ -117,7 +106,7 @@ export default function Stat1Page() {
                     <option value="">Select</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
-                    <option value="Other">Yes Please</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
 
@@ -145,15 +134,14 @@ export default function Stat1Page() {
                 Please answer the following questions about the quality of your sleep:
             </label>
             <div className="w-full overflow-x-auto">
-                <div className="min-w-200">
+                <div className="min-w-180 mx-auto">
 
                     <div className="grid grid-cols-7 border-b-2 border-gray-300">
                         <div />
-
                         {options.map((option) => (
                             <div
                                 key={option}
-                                className="px-2 pb-3 text-center text-sm font-semibold"
+                                className="px-2 pb-3 text-center text-m font-semibold"
                             >
                                 {option}
                             </div>
@@ -163,7 +151,7 @@ export default function Stat1Page() {
                     {questions.map((question, questionIndex) => (
                         <div
                             key={question}
-                            className="grid grid-cols-7 items-center py-4"
+                            className="grid grid-cols-7 items-center py-3"
                         >
                             <div className="pr-4">
                                 {question}
@@ -202,7 +190,7 @@ export default function Stat1Page() {
                 onClick={finishQuestionnaire}
                 className="mt-6 rounded bg-green-600 px-4 py-2 text-white"
             >
-                Finish questionnaire
+                Finish
             </button>
 
             {questionnaireMessage && (
