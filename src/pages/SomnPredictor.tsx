@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 // Förenklade variabelnamn med förklaringar. "Fältet" är namnet som skickas
 // till backend och motsvarar en kolumn i datasetet (se kommentaren nedan).
@@ -50,7 +49,6 @@ const variabler = [
 ];
 
 export default function SomnPredictorPage() {
-    const navigate = useNavigate();
 
     const [kon, setKon] = useState<"flicka" | "pojke">("flicka");
     const [värden, setVärden] = useState<Record<string, string>>({});
@@ -99,7 +97,7 @@ export default function SomnPredictorPage() {
                 throw new Error(`Backend returned ${response.status}`);
             }
 
-            const data: { sleepQuality: number } = await response.json();
+            const data: { sleepQuality: number; } = await response.json();
 
             setResultat(
                 `Predikterat sömnkvalitetsindex: ${data.sleepQuality.toFixed(2)} ` +
@@ -116,13 +114,6 @@ export default function SomnPredictorPage() {
         // delade #center-stilen centrerar, och ger luft under formuläret.
         <section id="center">
             <div className="w-full max-w-2xl pb-16">
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                    className="mb-6 rounded border border-gray-300 px-3 py-1 hover:bg-gray-100"
-                >
-                    ← Tillbaka
-                </button>
 
                 <h1 className="text-2xl font-bold">Sömnkvalitets-prediktor</h1>
 

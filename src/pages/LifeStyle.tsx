@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function LifestylePage() {
-    const navigate = useNavigate();
 
     const [leisureScreenHours, setLeisureScreenHours] = useState("");
     const [sleepQualityIndex, setSleepQualityIndex] = useState("");
@@ -32,8 +30,8 @@ export default function LifestylePage() {
 
             const level =
                 data.bdi <= 13 ? "minimal" :
-                data.bdi <= 19 ? "mild" :
-                data.bdi <= 28 ? "måttlig" : "svår";
+                    data.bdi <= 19 ? "mild" :
+                        data.bdi <= 28 ? "måttlig" : "svår";
 
             setResult(`Predikterad BDI-poäng: ${data.bdi.toFixed(1)} av 63 – ${level} nivå av depressiva symptom`);
         } catch (error) {
@@ -44,13 +42,6 @@ export default function LifestylePage() {
     return (
         <section id="center">
             <div className="w-full max-w-2xl pb-16">
-                <button
-                    type="button"
-                    onClick={() => navigate("/")}
-                    className="mb-6 rounded border border-gray-300 px-3 py-1 hover:bg-gray-100"
-                >
-                    ← Tillbaka
-                </button>
 
                 <h1 className="text-2xl font-bold">Livsstils-prediktor</h1>
 
