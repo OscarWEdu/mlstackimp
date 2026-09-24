@@ -15,3 +15,10 @@
 
 # Project Evaluation
 https://github.com/OscarWPublic/mlstackimp/wiki/Evaluation
+
+# Contributors
+
+- [Oscar Ward](https://github.com/OscarWPublic)
+- [Jacob Larsson](https://github.com/jacoblasse)
+- [Haviet Kok](https://github.com/havietkok-sys)
+- [Oliver Apelqvist](https://github.com/OliverApel96)
